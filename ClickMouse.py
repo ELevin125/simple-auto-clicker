@@ -16,8 +16,6 @@ class ClickMouse(threading.Thread):
         self.max_clicks.set(str(float("inf")))
         self._current_click = 0
 
-        print(self.delay, self.hold_time)
-
     def start_clicking(self):
         self.running = True
 
