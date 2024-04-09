@@ -4,16 +4,19 @@ from pynput.mouse import Button
 import tkinter as tk
 
 class ClickMouse(threading.Thread):
-    def __init__(self, mouse):
+    def __init__(self, mouse, delay, hold_time):
         super(ClickMouse, self).__init__()
         self.mouse = mouse
-        self.delay = 0.01
+        self.delay = delay
+        self.hold_time = hold_time;
         self.button = Button.left
         self.running = False
         self.program_running = True
         self.max_clicks = tk.StringVar()
         self.max_clicks.set(str(float("inf")))
         self._current_click = 0
+
+        print(self.delay, self.hold_time)
 
     def start_clicking(self):
         self.running = True
@@ -27,7 +30,7 @@ class ClickMouse(threading.Thread):
             while self.can_run():
                 self._current_click += 1
                 self.mouse.press(self.button)
-                time.sleep(0.2)
+                time.sleep(self.hold_time)
                 self.mouse.release(self.button)
                 time.sleep(self.delay)
             else:
