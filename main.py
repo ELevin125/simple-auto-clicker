@@ -1,49 +1,7 @@
-import time
-import threading
 from pynput.mouse import Button, Controller
 from pynput.keyboard import Listener, Key
 import tkinter as tk
-
-class ClickMouse(threading.Thread):
-    def __init__(self):
-        super(ClickMouse, self).__init__()
-        self.delay = 0.01
-        self.button = Button.left
-        self.running = False
-        self.program_running = True
-        self.max_clicks = tk.IntVar()
-        self.max_clicks.set(float("inf"))
-        self._current_click = 0
-
-    def start_clicking(self):
-        self.running = True
-
-    def stop_clicking(self):
-        self._current_click = 0
-        self.running = False
-
-    def run(self):
-        while self.program_running:
-            while self.can_run():
-                self._current_click += 1
-                mouse.press(self.button)
-                time.sleep(0.2)
-                mouse.release(self.button)
-                time.sleep(self.delay)
-            else:
-                self.stop_clicking()
-            time.sleep(0.1)
-
-    def can_run(self):
-        return self.running and self._current_click < self.max_clicks.get()
-    
-    def update_max_clicks(self, new_max):
-        self.max_clicks.set(new_max)
-
-    def exit(self):
-        self.stop_clicking()
-        self.program_running = False
-
+from ClickMouse import ClickMouse
 
 def on_press(key):
     if key == autoclick_start_stop_key:
@@ -85,8 +43,8 @@ root.title("Auto Clicker")
 root.protocol("WM_DELETE_WINDOW", on_closing)
 
 # Create ClickMouse instance
-mouse = Controller()
-click_thread = ClickMouse()
+# mouse = Controller()
+click_thread = ClickMouse(Controller())
 click_thread.start()
 
 # Click Interval
@@ -114,7 +72,6 @@ repeat_radio2 = tk.Radiobutton(root, text="Repeat For:", variable=repeat_var, va
 repeat_radio2.grid(row=3, column=0, padx=5, pady=5)
 repeat_count_entry = tk.Entry(root, textvariable=str(click_thread.max_clicks))
 repeat_count_entry.grid(row=3, column=1, padx=5, pady=5)
-# repeat_count_entry.insert(tk.END, "100")
 update_repeat_option()  # Disable repeat count entry initially
 
 # Start/Stop Button
